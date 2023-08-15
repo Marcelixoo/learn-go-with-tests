@@ -11,7 +11,7 @@ import (
 func main() {
 	fmt.Println("Running chapter \"JSON, routing and embedding\"")
 
-	server := v1.NewServer(v1.NewInMemoryPlayerStore())
+	server := v1.NewPlayerServer(v1.NewInMemoryPlayerStore())
 
 	err := http.ListenAndServe(":50012", server)
 	log.Fatal(err)

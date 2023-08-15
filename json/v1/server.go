@@ -15,7 +15,7 @@ type PlayerServer struct {
 	store PlayerStore
 }
 
-func NewServer(store PlayerStore) *PlayerServer {
+func NewPlayerServer(store PlayerStore) *PlayerServer {
 	return &PlayerServer{store}
 }
 
