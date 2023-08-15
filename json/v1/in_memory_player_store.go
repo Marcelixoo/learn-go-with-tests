@@ -1,4 +1,4 @@
-package main
+package v1
 
 type InMemoryPlayerStore struct {
 	store map[string]int

@@ -1,4 +1,4 @@
-package main
+package v1
 
 import (
 	"fmt"
@@ -13,6 +13,10 @@ type PlayerStore interface {
 
 type PlayerServer struct {
 	store PlayerStore
+}
+
+func NewServer(store PlayerStore) *PlayerServer {
+	return &PlayerServer{store}
 }
 
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
