@@ -1,18 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
-	v1 "github.com/Marcelixoo/learn-go-with-tests/json/v1"
+	v0 "github.com/Marcelixoo/learn-go-with-tests/json/v0"
 )
 
+type InMemoryPlayerStore struct{}
+
+func (i *InMemoryPlayerStore) GetPlayerScore(name string) int {
+	return 123
+}
+
 func main() {
-	fmt.Println("Running chapter \"JSON, routing and embedding\"")
-
-	server := v1.NewPlayerServer(v1.NewInMemoryPlayerStore())
-
-	err := http.ListenAndServe(":50012", server)
-	log.Fatal(err)
+	server := v0.NewPlayerServer(&InMemoryPlayerStore{})
+	log.Fatal(http.ListenAndServe(":50012", server))
 }
