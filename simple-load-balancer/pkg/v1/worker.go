@@ -16,21 +16,28 @@ type Worker struct {
 	requests chan Request // work to do (buffered channel)
 	pending  int          // count of pending tasks
 	index    int          // index in the heap
+	started  bool
 }
 
 func NewWorker(id string) *Worker {
-	return &Worker{id, make(chan Request, 100), 0, 0}
+	return &Worker{id, make(chan Request, 100), 0, 0, false}
 }
 
 func (w *Worker) Start(done chan *Worker) {
-	addCtx := func(res string) string {
+	appendID := func(res string) string {
 		return fmt.Sprintf("%s [%s]", res, w.id)
 	}
+
+	if w.started {
+		return
+	}
+	w.started = true
+
 	for {
 		req := <-w.requests // get request from balancer
 		w.pending++
-		req.c <- addCtx(req.fn()) // send result to channel
-		done <- w                 // signal work is done
+		req.c <- appendID(req.fn()) // send result to channel
+		done <- w                   // signal work is done
 		w.pending--
 	}
 }
