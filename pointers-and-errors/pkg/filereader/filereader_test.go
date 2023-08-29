@@ -24,10 +24,6 @@ func TestReadFile(t *testing.T) {
 	t.Run("erroers if file does not exist", func(t *testing.T) {
 		_, err := filereader.ReadFile("ops.txt")
 
-		if err != nil {
-			t.Errorf("unexpected error %q", err)
-		}
-
 		if err == nil {
 			t.Error("expected error didn't occur")
 		}
