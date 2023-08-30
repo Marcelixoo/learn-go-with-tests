@@ -1,4 +1,4 @@
-module github.com/Marcelixoo/go_specs_greet
+module github.com/Marcelixoo/learn-go-with-tests
 
 go 1.20
 
