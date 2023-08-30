@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	requests := make(chan v1.Request)
-	responses := make(chan string)
+	channelOfRequests := make(chan v1.Request)
+	channelOfResponses := make(chan string)
 
 	poolOfWorkers := v1.Pool{
 		v1.NewWorker("#1"),
@@ -19,19 +19,18 @@ func main() {
 		v1.NewWorker("#4"),
 	}
 
-	numOfWorkers := poolOfWorkers.Len()
-	go StartRequester(requests, responses, numOfWorkers)
-
 	balancer := v1.NewBalancer(poolOfWorkers)
-	go balancer.Balance(requests)
+	go balancer.Balance(channelOfRequests)
+
+	go StartRequester(channelOfRequests, channelOfResponses, poolOfWorkers.Len())
 
 	fmt.Println("processing incoming requests")
-	for res := range responses {
+	for res := range channelOfResponses {
 		fmt.Printf("got response %q\n", res)
 	}
 }
 
-func StartRequester(requests chan<- v1.Request, responses chan<- string, numOfWorkers int) {
+func StartRequester(chanOfRequests chan<- v1.Request, chanOfResponses chan<- string, numOfWorkers int) {
 	c := make(chan string)
 
 	for i := 0; i < numOfWorkers; i++ {
@@ -39,9 +38,9 @@ func StartRequester(requests chan<- v1.Request, responses chan<- string, numOfWo
 			for {
 				simulateLoadFor(numOfWorkers)
 
-				requests <- v1.NewRequest(workerFn, c)
+				chanOfRequests <- v1.NewRequest(workerFn, c)
 				result := <-c
-				responses <- result
+				chanOfResponses <- result
 			}
 		}(numOfWorkers)
 	}

@@ -2,8 +2,8 @@ package v1
 
 type Pool []*Worker
 
-// Pool is an implementation of the Heap interface,
-// which is tracked by load.
+// Pool is an implementation of the Heap interface.
+// It prioritizes items in the list based on load.
 func (p Pool) Less(i, j int) bool {
 	return p[i].pending < p[j].pending
 }

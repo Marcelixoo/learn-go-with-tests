@@ -19,10 +19,10 @@ func NewBalancer(pool Pool) *Balancer {
 	return &b
 }
 
-func (b *Balancer) Balance(work chan Request) {
+func (b *Balancer) Balance(chanOfRequests chan Request) {
 	for {
 		select {
-		case req := <-work:
+		case req := <-chanOfRequests:
 			b.dispatch(req)
 		case w := <-b.done:
 			b.completed(w)
